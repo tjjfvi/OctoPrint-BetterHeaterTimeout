@@ -20,7 +20,6 @@ class BetterHeaterTimeoutPlugin(
 		return dict(js=['js/BetterHeaterTimeout.js'])
 
 	def on_printer_add_temperature(self, data):
-		self._logger.info([self._temp_statuses, self._settings.get_float(["timeout"])])
 		if not self._settings.get(["enabled"]) or not self._printer.is_ready():
 			self._temp_statuses = dict();
 
