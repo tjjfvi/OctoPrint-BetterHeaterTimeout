@@ -11,4 +11,4 @@ or manually using this URL:
 
 ## Configuration
 
-The checkbox enabled/disabled the timeout, and the number input changes the timeout length.
+The checkbox enables/disables the timeout, and the number input changes the timeout length.
