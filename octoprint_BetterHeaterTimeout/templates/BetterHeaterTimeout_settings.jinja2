@@ -1,0 +1,11 @@
+<form class="form-horizontal">
+	<div class="control-group">
+		<label class="control-label">
+			<input type="checkbox" style="margin-top: -2px; margin-right: 5px;" data-bind="checked: settings.plugins.BetterHeaterTimeout.enabled"/>
+			{{ _('Timeout') }}
+		</label>
+		<div class="controls">
+			<input type="number" data-bind="value: settings.plugins.BetterHeaterTimeout.timeout, enable: settings.plugins.BetterHeaterTimeout.enabled"/>
+		</div>
+	</div>
+</form>

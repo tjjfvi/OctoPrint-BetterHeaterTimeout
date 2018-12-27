@@ -1,0 +1,4 @@
+include README.md
+recursive-include octoprint_BetterHeaterTimeout/templates *
+recursive-include octoprint_BetterHeaterTimeout/translations *
+recursive-include octoprint_BetterHeaterTimeout/static *
