@@ -1,6 +1,6 @@
 # OctoPrint-BetterHeaterTimeout
 
-**TODO:** Describe what your plugin does.
+Turns off heaters after specified time being on and unused.
 
 ## Setup
 
@@ -9,9 +9,6 @@ or manually using this URL:
 
     https://github.com/tjjfvi/OctoPrint-BetterHeaterTimeout/archive/master.zip
 
-**TODO:** Describe how to install your plugin, if more needs to be done than just installing it via pip or through
-the plugin manager.
-
 ## Configuration
 
-**TODO:** Describe your plugin's configuration options (if any).
+The checkbox enabled/disabled the timeout, and the number input changes the timeout length.
