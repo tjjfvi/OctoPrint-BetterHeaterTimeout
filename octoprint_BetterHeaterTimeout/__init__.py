@@ -13,12 +13,6 @@ class BetterHeaterTimeoutPlugin(
 		self._printer.register_callback(self);
 		self._temp_statuses = dict();
 
-	def get_template_configs(self):
-		return [dict(type="settings", custom_bindings=False)]
-
-	def get_assets(self):
-		return dict(js=['js/BetterHeaterTimeout.js'])
-
 	def on_printer_add_temperature(self, data):
 		if not self._settings.get(["enabled"]) or not self._printer.is_ready():
 			self._temp_statuses = dict();
@@ -27,35 +21,64 @@ class BetterHeaterTimeoutPlugin(
 
 		for key in data:
 			if key == "time":
-				return
+				continue
 
-			if not data[key]["target"]:
+			target = data[key]["target"]
+
+			if not target:
 				if key in self._temp_statuses:
 					del self._temp_statuses[key]
 			else:
 				if key in self._temp_statuses:
-					time_elapsed = time - self._temp_statuses[key]["start"]
-					timeout = self._settings.get_float(["timeout"])
-					if time_elapsed >= timeout:
-						self._printer.set_temperature(key, 0);
-						payload = dict(
-							heater=key,
-							time_elapsed=time_elapsed,
-							timeout=timeout,
+					if self._settings.get(["since_change"]) and target != self._temp_statuses[key]["temp"]:
+						self._temp_statuses[key] = dict(
+							start=time,
+							temp=target,
 						)
-						self._event_bus.fire("HeaterTimeout", payload)
-						self._plugin_manager.send_plugin_message(self._identifier, dict(event="HeaterTimeout", payload=payload))
+					else:
+						time_elapsed = time - self._temp_statuses[key]["start"]
+						timeout = self._settings.get_float(["timeout"])
+						if time_elapsed >= timeout:
+							def send_gcode_lines(setting_name):
+								self._printer.commands(self._settings.get([setting_name]) \
+									.replace("$heater", key) \
+									.replace("$time_elapsed", str(time_elapsed)) \
+									.replace("$timeout", str(timeout)) \
+									.split("\n"))
+
+							send_gcode_lines("before_gcode");
+							self._printer.set_temperature(key, 0);
+							payload = dict(
+								heater=key,
+								time_elapsed=time_elapsed,
+								timeout=timeout,
+							)
+							self._event_bus.fire("HeaterTimeout", payload)
+							self._plugin_manager.send_plugin_message(self._identifier, dict(event="HeaterTimeout", payload=payload))
+							send_gcode_lines("after_gcode");
 				else:
 					self._temp_statuses[key] = dict(
-						start=time
+						start=time,
+						temp=target,
 					)
 
+	def get_template_configs(self):
+		return [dict(type="settings", custom_bindings=False)]
+
+	def get_assets(self):
+		return dict(js=['js/BetterHeaterTimeout.js'])
 
 	def get_settings_defaults(self):
 		return dict(
 			timeout=600,
-			enabled=True
+			enabled=True,
+			since_change=True,
+			before_gcode='',
+			after_gcode='M117 $heater timed out',
 		)
+
+	def get_settings_version(self):
+		return 2
 
 	def get_update_information(self):
 		return dict(
