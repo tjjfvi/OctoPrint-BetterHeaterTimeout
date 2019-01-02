@@ -1,6 +1,16 @@
 # OctoPrint-BetterHeaterTimeout
 
-Turns off heaters after specified time being on and unused.
+ Turns off heaters after specified time being on and unused.
+ 
+*Note: this plugin has not been tested with versions under 1.3.10; they may not work!*
+
+## Advantages:
+ - Supports configuring timeout length
+ - Supports before/after gcode
+ - Supports notification via Web UI
+ - Fires a custom event _*_ when the heaters timeout, so one can be notified or otherwise hook on the event.
+
+_*May not be (officially) supported; see [OctoPrint#2965](https://github.com/foosel/OctoPrint/issues/2965) for more info._
 
 ## Setup
 
@@ -8,6 +18,10 @@ Install via the bundled [Plugin Manager](https://github.com/foosel/OctoPrint/wik
 or manually using this URL:
 
     https://github.com/tjjfvi/OctoPrint-BetterHeaterTimeout/archive/master.zip
+
+If you want to trigger on the custom event, use the event name `HeaterTimeout`.
+The payload values are `heater`, `time_elapsed`, and `timeout`.
+
 
 ## Configuration
 
@@ -22,7 +36,6 @@ If set to the former, changing the target temp will reset the timeout.
 GCODE commands to run before/after the heaters are disabled.
 You can use the placeholders `$heater`, `$time_elapsed`. and `$timeout`.
 I think the names are pretty self-explanatory.
-
 
 **Examples:**
 ```
