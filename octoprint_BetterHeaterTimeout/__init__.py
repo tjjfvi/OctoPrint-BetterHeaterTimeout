@@ -37,7 +37,7 @@ class BetterHeaterTimeoutPlugin(
 						)
 					else:
 						time_elapsed = time - self._temp_statuses[key]["start"]
-						timeout = self._settings.get_float(["timeout"])
+						timeout = self._settings.get_float(["bedTimeout" if key == "bed" else "timeout"])
 						if time_elapsed >= timeout:
 							def send_gcode_lines(setting_name):
 								self._printer.commands(self._settings.get([setting_name]) \
@@ -70,6 +70,7 @@ class BetterHeaterTimeoutPlugin(
 
 	def get_settings_defaults(self):
 		return dict(
+			bedTimeout=600,
 			timeout=600,
 			enabled=True,
 			since_change=True,
