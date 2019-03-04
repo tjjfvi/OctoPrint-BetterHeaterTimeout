@@ -19,7 +19,18 @@
 			"></select>
 		</div>
 	</div>
-	<h4>{{ _('GCODE') }}</h4>
+	<div class="control-group">
+		<label class="control-label">
+			{{ _('Bed') }}
+		</label>
+		<div class="controls">
+			<div class="input-append">
+				<input class="input-mini text-right" type="number" data-bind="value: settings.plugins.BetterHeaterTimeout.bedTimeout, enable: settings.plugins.BetterHeaterTimeout.enabled"/>
+				<span class="add-on">s</span>
+			</div>
+		</div>
+	</div>
+	<h4>{{ _('GCODEs') }}</h4>
 	<div class="control-group">
 		<label class="control-label">{{ _('Before GCODE') }}</label>
 		<div class="controls">
