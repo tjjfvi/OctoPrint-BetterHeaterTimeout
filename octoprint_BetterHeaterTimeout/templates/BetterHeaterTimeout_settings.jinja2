@@ -3,33 +3,39 @@
 	<div class="control-group">
 		<label class="control-label">
 			<input type="checkbox" style="margin-top: -2px; margin-right: 5px;" data-bind="checked: settings.plugins.BetterHeaterTimeout.enabled"/>
-			{{ _('Timeout') }}
+			{{ _('Tool') }}
 		</label>
 		<div class="controls">
 			<div class="input-append">
 				<input class="input-mini text-right" type="number" data-bind="value: settings.plugins.BetterHeaterTimeout.timeout, enable: settings.plugins.BetterHeaterTimeout.enabled"/>
 				<span class="add-on">s</span>
 			</div>
-			<select data-bind="
-				options: [true, false],
-				optionsText: b => b ? 'after target temp changes' : 'after heating starts',
-				value: settings.plugins.BetterHeaterTimeout.since_change,
-					enable: settings.plugins.BetterHeaterTimeout.enabled
-
-			"></select>
 		</div>
 	</div>
 	<div class="control-group">
 		<label class="control-label">
+			<input type="checkbox" style="margin-top: -2px; margin-right: 5px;" data-bind="checked: settings.plugins.BetterHeaterTimeout.bedEnabled"/>
 			{{ _('Bed') }}
 		</label>
 		<div class="controls">
 			<div class="input-append">
-				<input class="input-mini text-right" type="number" data-bind="value: settings.plugins.BetterHeaterTimeout.bedTimeout, enable: settings.plugins.BetterHeaterTimeout.enabled"/>
+				<input class="input-mini text-right" type="number" data-bind="value: settings.plugins.BetterHeaterTimeout.bedTimeout, enable: settings.plugins.BetterHeaterTimeout.bedEnabled"/>
 				<span class="add-on">s</span>
 			</div>
 		</div>
 	</div>
+	<div class="control-group">
+		<label class="control-label">
+			{{ _('From') }}
+		</label>
+		<div class="controls">
+			<select data-bind="
+				options: [true, false],
+				optionsText: b => b ? 'after target temp changes' : 'after heating starts',
+				value: settings.plugins.BetterHeaterTimeout.since_change
+			"></select>
+		</div>
+	</div>	
 	<h4>{{ _('GCODEs') }}</h4>
 	<div class="control-group">
 		<label class="control-label">{{ _('Before GCODE') }}</label>
