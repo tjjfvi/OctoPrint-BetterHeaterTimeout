@@ -14,7 +14,7 @@ class BetterHeaterTimeoutPlugin(
 		self._temp_statuses = dict();
 
 	def on_printer_add_temperature(self, data):
-		if not self._settings.get(["enabled"]) or not self._printer.is_ready():
+		if (not self._settings.get(["enabled"]) and not self._settings.get(["bedEnabled"])) or not self._printer.is_ready():
 			self._temp_statuses = dict();
 
 		time = data["time"]
@@ -38,7 +38,8 @@ class BetterHeaterTimeoutPlugin(
 					else:
 						time_elapsed = time - self._temp_statuses[key]["start"]
 						timeout = self._settings.get_float(["bedTimeout" if key == "bed" else "timeout"])
-						if time_elapsed >= timeout:
+						is_enabled = self._settings.get(["bedEnabled" if key == "bed" else "enabled"])
+						if time_elapsed >= timeout and is_enabled:
 							def send_gcode_lines(setting_name):
 								self._printer.commands(self._settings.get([setting_name]) \
 									.replace("$heater", key) \
@@ -73,6 +74,7 @@ class BetterHeaterTimeoutPlugin(
 			bedTimeout=600,
 			timeout=600,
 			enabled=True,
+			bedEnabled=True,
 			since_change=True,
 			before_gcode='',
 			after_gcode='M117 $heater timed out',
