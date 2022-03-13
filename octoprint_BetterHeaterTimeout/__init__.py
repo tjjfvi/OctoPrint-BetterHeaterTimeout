@@ -45,7 +45,7 @@ class BetterHeaterTimeoutPlugin(
 									.replace("$time_elapsed", str(time_elapsed)) \
 									.replace("$timeout", str(timeout)) \
 									.split("\n"))
-
+							del self._temp_statuses[key]                # Reset our timer to prevent/reduce multiple triggers in the case of long running commands on the target machine
 							send_gcode_lines("before_gcode");
 							self._printer.set_temperature(key, 0);
 							payload = dict(
