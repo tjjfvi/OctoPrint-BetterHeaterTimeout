@@ -1,7 +1,13 @@
 # coding=utf-8
 from __future__ import absolute_import
 
+import re
+
 import octoprint.plugin
+
+# Heater names OctoPrint's set_temperature accepts. Serial line noise can make
+# the temperature parser report bogus sensors (e.g. "o") which it rejects.
+VALID_HEATER = re.compile(r"^(tool\d*|bed|chamber)$")
 
 class BetterHeaterTimeoutPlugin(
 	octoprint.plugin.SettingsPlugin,
@@ -21,6 +27,9 @@ class BetterHeaterTimeoutPlugin(
 
 		for key in data:
 			if key == "time":
+				continue
+
+			if not VALID_HEATER.match(key):
 				continue
 
 			target = data[key]["target"]
@@ -47,7 +56,10 @@ class BetterHeaterTimeoutPlugin(
 									.split("\n"))
 
 							send_gcode_lines("before_gcode");
-							self._printer.set_temperature(key, 0);
+							try:
+								self._printer.set_temperature(key, 0);
+							except ValueError as e:
+								self._logger.warning("Could not turn off heater %s: %s", key, e)
 							payload = dict(
 								heater=key,
 								time_elapsed=time_elapsed,
